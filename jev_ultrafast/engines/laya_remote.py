@@ -21,11 +21,11 @@ class LayaRemoteEngine(BaseEngine):
     Uses HTTP/2 with keep-alive connections for near-instant latency.
     """
 
-    def __init__(self, endpoint_url: str = None, api_key: str = None, timeout: float = 15.0):
+    def __init__(self, endpoint_url: str = None, api_key: str = None, timeout: float = None):
         url = endpoint_url or os.environ.get("LAYA_ENDPOINT") or os.environ.get("DECISION_API_URL") or "http://localhost:8000"
         self.endpoint_url = url.rstrip("/")
         self.api_key = api_key or os.environ.get("LAYA_API_KEY", "")
-        self.timeout = timeout
+        self.timeout = timeout or float(os.environ.get("LAYA_TIMEOUT", 45.0))
         self._client = httpx.Client(http2=True, timeout=self.timeout)
 
     @property
